@@ -13,17 +13,17 @@ with open('results.csv', 'w') as file:
        writer.writerow([s,x])
 """
 
-import tensorflow as tf
-from tensorflow import keras
+
+"""
+Dataset provided by - https://grail.cs.washington.edu/projects/deepexpr/ferg-db.html
+This contains 55767 annotated face images of six stylized characters modeled using MAYA software
+"""
+
 import numpy as np
-import mnist
-import matplotlib.pyplot as plt
 import random
 import cv2
 import pandas as pd
-import time
 import os
-import sklearn
 import pickle
 from tqdm import tqdm
 
@@ -34,17 +34,12 @@ from tqdm import tqdm
 
 def expressions():
 
-    
-
-    
-
-
     CATEGORIES = ["anger","disgust","fear","joy","neutral","sadness","surprise"]
 
 
     training_data = []
     testing_data = []
-    IMG_SIZE = 200
+    IMG_SIZE = 256
 
 
     def create_training_data():
@@ -56,8 +51,6 @@ def expressions():
             path = os.path.join(Dataloc,category)  # create path 
             for img in os.listdir(path):  # iterate over each image per emotion
                 img_array = cv2.imread(os.path.join(path,img) ,cv2.IMREAD_GRAYSCALE)  # convert to array
-                plt.imshow(img_array, cmap='gray')  # graph it
-                #plt.show()  # display
 
 
 
@@ -93,8 +86,7 @@ def expressions():
             path = os.path.join(Testloc,category)  # create path 
             for img in os.listdir(path):  # iterate over each image per emotion
                 img_array = cv2.imread(os.path.join(path,img) ,cv2.IMREAD_GRAYSCALE)  # convert to array
-                plt.imshow(img_array, cmap='gray')  # graph it
-                #plt.show()  # display
+               
 
 
 
@@ -116,11 +108,6 @@ def expressions():
                 except Exception as e:  # in the interest in keeping the output clean...
                     pass
 
-
-
-
-
-    
     
     create_training_data()
     create_testing_data()
@@ -158,18 +145,18 @@ def expressions():
     
 
     pickle_out = open("testing_images.pickle","wb")
-    pickle.dump(train_images, pickle_out)
+    pickle.dump(testing_images, pickle_out)
     pickle_out.close()
 
     pickle_out = open("testing_lables.pickle","wb")
-    pickle.dump(train_lables, pickle_out)
+    pickle.dump(testing_lables, pickle_out)
     pickle_out.close()
 
     pickle_in = open("testing_images.pickle","rb")
-    train_images= pickle.load(pickle_in)
+    testing_images= pickle.load(pickle_in)
 
     pickle_in = open("testing_lables.pickle","rb")
-    train_lables = pickle.load(pickle_in)
+    testing_lables = pickle.load(pickle_in)
 
     #pickel for training set
 
@@ -188,12 +175,3 @@ def expressions():
     train_lables = pickle.load(pickle_in)
 
 
-
-    train_images= np.array(train_images).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
-    train_lables = np.array(train_lables)
-
-    
-    testing_images= np.array(testing_images).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
-    testing_lables = np.array(testing_lables)
-
-    return (train_images,train_lables, testing_images, testing_lables)

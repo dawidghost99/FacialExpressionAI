@@ -15,4 +15,4 @@ with open('results.csv', 'w') as file:
 
 import NN
 
-NN.NeuralNet(64,10,0)
+NN.NeuralNet(128,10,0)

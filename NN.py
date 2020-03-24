@@ -9,13 +9,28 @@ import cv2
 import pandas as pd
 import time
 import os
+import pickle
 import sklearn
 from tqdm import tqdm
 import CreateDataSet as DS
 
 
-trainImages, trainLabels,testImages,testLabels =  DS.expressions()
 
+#DS.expressions()
+
+trainImages = pickle.load(open('train_images.pickle','rb'))
+trainLabels = pickle.load(open('train_lables.pickle','rb'))
+
+
+testImages = pickle.load(open('testing_images.pickle','rb'))
+testLabels = pickle.load(open('testing_lables.pickle','rb'))
+IMG_SIZE = 256
+
+trainImages = np.array(trainImages).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
+trainLabels = np.array(trainLabels)
+
+testImages = np.array(testImages).reshape(-1, IMG_SIZE, IMG_SIZE, 1)
+testLabels = np.array(testLabels)
 
 #print(trainImages, trainLabels)
 
@@ -33,7 +48,7 @@ def NeuralNet(inputNeurons, numepochs,run):
 
     model = keras.Sequential([
     
-    keras.layers.Flatten(input_shape=(200,200,1)),
+    keras.layers.Flatten(input_shape=(256,256,1)),
     keras.layers.Dense(inputNeurons, activation=tf.nn.relu),
     #keras.layers.Dense(inputNeurons, activation=tf.nn.relu),
     #keras.layers.Dense(inputNeurons, activation=tf.nn.relu),
@@ -79,7 +94,7 @@ def NeuralNet(inputNeurons, numepochs,run):
             same+=1
         count +=1
 
-    testAccu = (same / 1513)*100
+    testAccu = (same / 10925)*100
 
 
     print("test accuracy: ", testAccu)
